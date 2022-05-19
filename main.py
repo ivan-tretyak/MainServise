@@ -2,6 +2,9 @@
 Routes and views for the flask application.
 """
 
+from flask import Flask
+app = Flask(__name__)
+
 from os import error
 
 from werkzeug.exceptions import BadRequest
@@ -44,3 +47,6 @@ app.register_error_handler(500, server_error)
 app.register_error_handler(405, method_is_not_allowed)
 app.register_error_handler(400, handle_invalid_usage)
 app.register_error_handler(validate.InvalidApiUsage, handle_invalid_usage)
+
+if __name__ == "__main__":
+    app.run()
