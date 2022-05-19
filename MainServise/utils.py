@@ -1,5 +1,6 @@
 import flask
 from flask import jsonify
+import json
 
 from MainServise import validate
 
@@ -34,7 +35,7 @@ def handle_invalid_usage(error: validate.InvalidApiUsage):
     """Returns handled exception for error 400."""
     return create_error_response(400, error.message)
 
-from typing import List
+from typing import Dict, List
 
 
 def read_file_txt(path: str) -> List[str]:
@@ -43,3 +44,8 @@ def read_file_txt(path: str) -> List[str]:
         for line in f:
             lines.append(line.replace('\n', ''))
     return lines
+
+def read_json_file(path: str) -> Dict:
+    with open(path) as f:
+        jsons = json.load(f)
+    return jsons

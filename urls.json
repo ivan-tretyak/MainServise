@@ -1,0 +1,13 @@
+{
+	"urls": [
+		{
+			"url": "https://imageclassificationtretyak.herokuapp.com",
+			"keyword": "object_on_photo",
+			"headers": {
+				"Content-Type": "application/vnd.api+json",
+				"Accept": "application/vnd.api+json"
+			}
+		}
+	]
+}
+	

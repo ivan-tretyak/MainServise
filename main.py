@@ -27,13 +27,13 @@ def classification():
             validate_json(data)
         except BadRequest:
             return create_error_response(400, "Failed to decode JSON object: Expecting value: line 1 column 1 (char 0)")
-
+        data_send = {'data':{}}
         #read urls txt
-        urls =  read_file_txt("urls.txt")
-        for url in urls:
-            header = {"Content-Type": "application/vnd.api+json", "Accept": "application/vnd.api+json"}
-            r = requests.post(url, headers=header, json=data)
-        return jsonify(r.json())
+        urls =  read_json_file("urls.json")
+        for url in urls['urls']:
+            r = requests.post(url['url'], headers=url['headers'], json=data)
+            data_send['data'][url["keyword"]] = r.json()['data']
+        return jsonify(data_send)
 
     elif request.headers['Content-Type'] == 'application/vnd.api+json' and request.mimetype_params != {}:
         return create_error_response(415, 'Mimetype parametres is not empty.')
