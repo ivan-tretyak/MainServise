@@ -1,3 +1,4 @@
-Flask~=1.1
+Flask
+requests
 gunicorn
-markupsafe==2.0.1
+markupsafe
