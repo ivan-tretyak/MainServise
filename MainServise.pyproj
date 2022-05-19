@@ -17,7 +17,7 @@
     <SuppressCollectPythonCloudServiceFiles>true</SuppressCollectPythonCloudServiceFiles>
     <Name>MainServise</Name>
     <RootNamespace>MainServise</RootNamespace>
-    <InterpreterId>Global|PythonCore|3.9</InterpreterId>
+    <InterpreterId>Global|ContinuumAnalytics|Anaconda39-64</InterpreterId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -28,46 +28,25 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="MainServise\error.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainServise\utils.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainServise\validate.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="runserver.py" />
     <Compile Include="MainServise\__init__.py" />
-    <Compile Include="MainServise\views.py" />
+    <Compile Include="MainServise\main.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="MainServise\" />
-    <Folder Include="MainServise\static\" />
-    <Folder Include="MainServise\static\content\" />
-    <Folder Include="MainServise\static\fonts\" />
-    <Folder Include="MainServise\static\scripts\" />
-    <Folder Include="MainServise\templates\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="urls.txt" />
     <Content Include="requirements.txt" />
-    <Content Include="MainServise\static\content\bootstrap.css" />
-    <Content Include="MainServise\static\content\bootstrap.min.css" />
-    <Content Include="MainServise\static\content\site.css" />
-    <Content Include="MainServise\static\fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="MainServise\static\fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="MainServise\static\fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="MainServise\static\fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="MainServise\static\scripts\bootstrap.js" />
-    <Content Include="MainServise\static\scripts\bootstrap.min.js" />
-    <Content Include="MainServise\static\scripts\jquery-1.10.2.intellisense.js" />
-    <Content Include="MainServise\static\scripts\jquery-1.10.2.js" />
-    <Content Include="MainServise\static\scripts\jquery-1.10.2.min.js" />
-    <Content Include="MainServise\static\scripts\jquery-1.10.2.min.map" />
-    <Content Include="MainServise\static\scripts\jquery.validate-vsdoc.js" />
-    <Content Include="MainServise\static\scripts\jquery.validate.js" />
-    <Content Include="MainServise\static\scripts\jquery.validate.min.js" />
-    <Content Include="MainServise\static\scripts\jquery.validate.unobtrusive.js" />
-    <Content Include="MainServise\static\scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="MainServise\static\scripts\modernizr-2.6.2.js" />
-    <Content Include="MainServise\static\scripts\respond.js" />
-    <Content Include="MainServise\static\scripts\respond.min.js" />
-    <Content Include="MainServise\static\scripts\_references.js" />
-    <Content Include="MainServise\templates\about.html" />
-    <Content Include="MainServise\templates\contact.html" />
-    <Content Include="MainServise\templates\index.html" />
-    <Content Include="MainServise\templates\layout.html" />
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="Global|ContinuumAnalytics|Anaconda39-64" />
