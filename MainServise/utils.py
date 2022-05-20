@@ -2,7 +2,10 @@ import flask
 from flask import jsonify
 import json
 
+from sympy import im
+
 from MainServise import validate
+from MainServise import json as my_json
 
 
 def create_response(status_code, message={}):
@@ -45,7 +48,7 @@ def read_file_txt(path: str) -> List[str]:
             lines.append(line.replace('\n', ''))
     return lines
 
-def read_json_file(path: str) -> Dict:
+def read_json_file(path: str) -> List[my_json.URL]:
     with open(path) as f:
         jsons = json.load(f)
-    return jsons
+    return my_json.build_URL(jsons)

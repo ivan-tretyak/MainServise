@@ -1,13 +1,1 @@
-{
-	"urls": [
-		{
-			"url": "https://imageclassificationtretyak.herokuapp.com",
-			"keyword": "object_on_photo",
-			"headers": {
-				"Content-Type": "application/vnd.api+json",
-				"Accept": "application/vnd.api+json"
-			}
-		}
-	]
-}
-	
+{"links": {"count_peoples": "https://imageclassificationtretyak.herokuapp.com", "object_on_photo": "https://imageclassificationtretyak.herokuapp.com"}, "data": {"count_peoples": {"type": "count peoples", "language": "en-US", "headers": {"Accept": "application/vnd.api+json", "Content-Type": "application/vnd.api+json"}, "keywords_group": "count_peoples"}, "object_on_photo": {"type": "item on photo", "language": "en-US", "headers": {"Accept": "application/vnd.api+json", "Content-Type": "application/vnd.api+json"}, "keywords_group": "object_on_photo"}}}
