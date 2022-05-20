@@ -50,7 +50,6 @@ def urls():
 
 @app.route('/urls/<keywords_group>', methods=["GET", "PATCH"])
 def get_urls_by_keywords_group(keywords_group):
-    validate_headers(request)
     urls = read_json_file("urls.json")
     if request.method == "GET":
         for url in urls:
@@ -58,6 +57,7 @@ def get_urls_by_keywords_group(keywords_group):
                 return jsonify(url.to_dict())
         abort(404)
     if request.method == "PATCH":
+        validate_headers(request)
         validate_json_urls(request.json)
         for i in range(len(urls)):
             if urls[i].keywords_group == keywords_group:
