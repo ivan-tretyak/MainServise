@@ -2,8 +2,6 @@ import flask
 from flask import jsonify
 import json
 
-from sympy import im
-
 from MainServise import validate
 from MainServise import json as my_json
 
