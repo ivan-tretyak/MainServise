@@ -44,7 +44,7 @@ def classification():
         user_json = validate_user_json(request.json)
         if type(user_json) != UserJSON:
             return incorrect_api_usage(user_json)
-        urls = utils.read_json_file()
+        urls = utils.read_json_file('url.json')
         data, links = urls['data'], urls['links']
         header = {'Content-Type':'application/json', 'Accept':'application/json'}
         for link in links:
@@ -65,11 +65,14 @@ def classification():
 def url():
     print(os.path.exists('url.json'))
     print(os.getcwd())
-    return jsonify(utils.read_json_file())
+    for root, _, files in os.walk(os.getcwd()):
+        for file in files:
+            print(os.path.join(root, file))
+    return jsonify(utils.read_json_file('url.json'))
 
 def exist_url(keywords_group, request):
     try:
-        jsons = utils.read_json_file()
+        jsons = utils.read_json_file('url.json')
         ans = {'data': {}}
         ans['data']['link'] = jsons['links'][keywords_group]
         ans['data']['type'] = jsons['data'][keywords_group]['type']
@@ -87,10 +90,10 @@ def update_url(keywords_group, request):
         urlsch = URLSchema()
         jsons = request.json
         url = urlsch.load(jsons)
-        jsons = utils.read_json_file()
+        jsons = utils.read_json_file('url.json')
         jsons = utils.add_new_link_to_url(jsons, url, keywords_group)
         utils.save_json('url.json', jsons)
-        return jsonify(utils.read_json_file())
+        return jsonify(utils.read_json_file('url.json'))
     except ValidationError as err:
         return incorrect_api_usage(err.messages)
     except KeyError:

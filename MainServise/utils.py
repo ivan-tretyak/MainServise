@@ -1,11 +1,13 @@
+import os
 from typing import List
 import json
 
 from MainServise.marshmallowSchemas.admin.url import *
 
 
-def read_json_file() -> List:
-    with open('url.json') as f:
+def read_json_file(path) -> List:
+    print(os.getcwd())
+    with open(path) as f:
         jsons = json.load(f)
     return jsons
 
