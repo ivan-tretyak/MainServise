@@ -1,4 +1,6 @@
-Flask
-requests
+Flask~=2.1.2
+requests~=2.26.0
 gunicorn
 markupsafe
+werkzeug~=2.0.2
+marshmallow~=3.15.0

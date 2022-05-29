@@ -3,79 +3,101 @@ Routes and views for the flask application.
 """
 
 from flask import Flask, abort
+
+from MainServise.marshmallowSchemas.admin.url import URLSchema
+
 app = Flask(__name__)
 
-from os import error
-
 from werkzeug.exceptions import BadRequest
-from MainServise import *
 from flask import jsonify, request
 import requests
 
-from MainServise.utils import *
-from MainServise.validate import validate_headers, validate_json, validate_json_urls
-from MainServise.json import build_URL_from_client, to_dict, build_URL
+from MainServise import utils
+from MainServise.marshmallowSchemas.client.clientjson import *
+from MainServise.marshmallowSchemas.client.headers import *
+
+@app.errorhandler(400)
+def incorrect_api_usage(e):
+    return jsonify({'error': e}), 400
+
+@app.errorhandler(404)
+def not_found(e):
+    return jsonify({'error': 'The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.'}), 404
+
+@app.errorhandler(405)
+def method_not_allowed(e):
+    return jsonify({'error':  'Method not allowed'}), 405
+
+@app.errorhandler(500)
+def internal_error(e):
+    return jsonify({'error': 'Internal server error'}), 500
 
 
 @app.route('/classification', methods=["POST"])
 def classification():
-    """Main client route"""
-
-    #validate client header and getting data
-    validate_headers(request)
+    headersSchema = Headers()
+    userJSON = JSON()
+    ansa = {'data':{}}
     try:
-        data = request.json
-        validate_json(data)
+        headersSchema.load(request.headers)
+        user_json = validate_user_json(request.json)
+        if type(user_json) != UserJSON:
+            return incorrect_api_usage(user_json)
+        urls = utils.read_json_file('urls.json')
+        data, links = urls['data'], urls['links']
+        header = {'Content-Type':'applicaton/json', 'Accept':'application/json'}
+        for link in links:
+            url = links[link]
+            ans = requests.post(url, headers=header, json=userJSON.dump(user_json))
+            ansa['data'][link] = ans.json()
+        return ansa
+
+    except ValidationError as err:
+        abort(400, descritpiton=err.messages)
     except BadRequest:
-        return create_error_response(400, "Failed to decode JSON object: Expecting value: line 1 column 1 (char 0)")
-    data_send = {'data':{}}
-    #read urls txt
-    urls =  read_json_file("urls.json")
-    for url in urls:
-        r = requests.post(url.link, headers=url.headers, json=data)
-        if r.status_code == 200:
-            data_send['data'][url.keywords_group] = r.json()['data']
-        else:
-            data_send['data'][url.keywords_group] = r.json()['error']
-    return jsonify(data_send)
-
-    
-
-@app.route('/urls', methods=["GET"])
-def urls():
-    urls = read_json_file("urls.json")
-    if request.method == "GET":
-        return jsonify(to_dict(urls))
+        return jsonify({'error': "JSON wasn't send."}), 400
 
 
-@app.route('/urls/<keywords_group>', methods=["GET", "PATCH"])
-def get_urls_by_keywords_group(keywords_group):
-    urls = read_json_file("urls.json")
-    if request.method == "GET":
-        for url in urls:
-            if url.keywords_group == keywords_group:
-                return jsonify(url.to_dict())
+@app.route('/url', methods=['GET'])
+def url():
+    return jsonify(utils.read_json_file('urls.json'))
+
+def exist_url(keywords_group, request):
+    try:
+        jsons = utils.read_json_file('urls.json')
+        ans = {'data': {}}
+        ans['data']['link'] = jsons['links'][keywords_group]
+        ans['data']['type'] = jsons['data'][keywords_group]['type']
+        ans['data']['keywords_group'] = jsons['data'][keywords_group]['keywords_group']
+        ans['data']['language'] = jsons['data'][keywords_group]['language']
+        return jsonify(ans)
+    except KeyError:
         abort(404)
-    if request.method == "PATCH":
-        validate_headers(request)
-        validate_json_urls(request.json)
-        for i in range(len(urls)):
-            if urls[i].keywords_group == keywords_group:
-                urls[i] = build_URL_from_client(request.json)
-                new_json = to_dict(urls)
-                with open('urls.json', 'w') as f:
-                    json.dump(new_json, f)
-        urls.append(build_URL_from_client(request.json))
-        new_json = to_dict(urls)
-        with open('urls.json', 'w') as f:
-            json.dump(new_json, f)
-        return jsonify(to_dict(read_json_file("urls.json")))
+    except:
+        abort(500)
 
-app.register_error_handler(404, resource_not_exists)
-app.register_error_handler(500, server_error)
-app.register_error_handler(405, method_is_not_allowed)
-app.register_error_handler(400, handle_invalid_usage)
-app.register_error_handler(validate.InvalidApiUsage, handle_invalid_usage)
+
+def update_url(keywords_group, request):
+    try:
+        urlsch = URLSchema()
+        jsons = request.json
+        url = urlsch.load(jsons)
+        jsons = utils.read_json_file('urls.json')
+        jsons = utils.add_new_link_to_url(jsons, url, keywords_group)
+        utils.save_json('urls.json', jsons)
+        return jsonify(utils.read_json_file('urls.json'))
+    except ValidationError as err:
+        return incorrect_api_usage(err.messages)
+    except KeyError:
+        abort(404)
+    except:
+        abort(500)
+
+
+@app.route('/url/<keywords_group>', methods=['GET', 'PATCH'])
+def urlsnew(keywords_group):
+    methods = {"GET": exist_url, 'PATCH': update_url}
+    return methods[request.method](keywords_group, request)
 
 if __name__ == "__main__":
     app.run()
