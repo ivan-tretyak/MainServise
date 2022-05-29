@@ -1,14 +1,11 @@
 from typing import List
-
-import flask
-from flask import jsonify
 import json
 
 from MainServise.marshmallowSchemas.admin.url import *
 
 
-def read_json_file(path: str) -> List:
-    with open(path) as f:
+def read_json_file() -> List:
+    with open('url.json') as f:
         jsons = json.load(f)
     return jsons
 

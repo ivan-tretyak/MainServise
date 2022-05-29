@@ -4,3 +4,4 @@ gunicorn
 markupsafe
 werkzeug~=2.0.2
 marshmallow~=3.15.0
+pillow~=8.4.0

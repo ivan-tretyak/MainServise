@@ -15,6 +15,7 @@ import requests
 from MainServise import utils
 from MainServise.marshmallowSchemas.client.clientjson import *
 from MainServise.marshmallowSchemas.client.headers import *
+import os
 
 @app.errorhandler(400)
 def incorrect_api_usage(e):
@@ -43,12 +44,14 @@ def classification():
         user_json = validate_user_json(request.json)
         if type(user_json) != UserJSON:
             return incorrect_api_usage(user_json)
-        urls = utils.read_json_file('urls.json')
+        urls = utils.read_json_file()
         data, links = urls['data'], urls['links']
-        header = {'Content-Type':'applicaton/json', 'Accept':'application/json'}
+        header = {'Content-Type':'application/json', 'Accept':'application/json'}
         for link in links:
             url = links[link]
-            ans = requests.post(url, headers=header, json=userJSON.dump(user_json))
+            print(type(request.json))
+            ans = requests.post(url, headers=header, json=request.json)
+            print(ans.json())
             ansa['data'][link] = ans.json()
         return ansa
 
@@ -60,11 +63,13 @@ def classification():
 
 @app.route('/url', methods=['GET'])
 def url():
-    return jsonify(utils.read_json_file('urls.json'))
+    print(os.path.exists('url.json'))
+    print(os.getcwd())
+    return jsonify(utils.read_json_file())
 
 def exist_url(keywords_group, request):
     try:
-        jsons = utils.read_json_file('urls.json')
+        jsons = utils.read_json_file()
         ans = {'data': {}}
         ans['data']['link'] = jsons['links'][keywords_group]
         ans['data']['type'] = jsons['data'][keywords_group]['type']
@@ -82,10 +87,10 @@ def update_url(keywords_group, request):
         urlsch = URLSchema()
         jsons = request.json
         url = urlsch.load(jsons)
-        jsons = utils.read_json_file('urls.json')
+        jsons = utils.read_json_file()
         jsons = utils.add_new_link_to_url(jsons, url, keywords_group)
-        utils.save_json('urls.json', jsons)
-        return jsonify(utils.read_json_file('urls.json'))
+        utils.save_json('url.json', jsons)
+        return jsonify(utils.read_json_file())
     except ValidationError as err:
         return incorrect_api_usage(err.messages)
     except KeyError:

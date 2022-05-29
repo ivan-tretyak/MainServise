@@ -41,7 +41,7 @@ if __name__ == "__main__":
                           'link': 'https://imageclassificationtretyak.herokuapp.com',
                           'type': 'group photo'}}
     urlsch = URLSchema()
-    with open('urls.json') as f:
+    with open('url.json') as f:
         jsons = json.load(f)
     print(jsons)
     url = urlsch.load(new_count)
