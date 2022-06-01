@@ -26,7 +26,8 @@ class ImageBase64(fields.Field):
 
     def _deserialize(self, value: str, attr: str, data, **kwargs):
         try:
-            im = Image.open(BytesIO(base64.b64decode(value)))
+            im = Image.open(BytesIO(base64.b64decode(value))).convert('RGB')
+            im.save('test.jpg', format='JPEG')
             buffered = BytesIO()
             im.save(buffered, format='JPEG')
             return base64.b64encode(buffered.getvalue()).decode('utf-8')

@@ -36,11 +36,9 @@ def internal_error(e):
 
 @app.route('/classification', methods=["POST"])
 def classification():
-    headersSchema = Headers()
-    userJSON = JSON()
     ansa = {'data':{}}
     try:
-        headersSchema.load(request.headers)
+        validate_headers(request.headers)
         user_json = validate_user_json(request.json)
         if type(user_json) != UserJSON:
             return incorrect_api_usage(user_json)
@@ -52,7 +50,10 @@ def classification():
             print(type(request.json))
             ans = requests.post(url, headers=header, json=request.json)
             print(ans.json())
-            ansa['data'][link] = ans.json()
+            try:
+                ansa['data'][link] = ans.json()['data']
+            except:
+                ansa['data'][link] = ans.json()['error']
         return ansa
 
     except ValidationError as err:

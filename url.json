@@ -1,1 +1,1 @@
-{"links": {"object_on_photo": "https://imageclassificationtretyak.herokuapp.com/"}, "data": {"object_on_photo": {"type": "item on photo", "language": "en-US", "keywords_group": "object_on_photo"}}}
+{"links": {"object_on_photo": "https://imageclassificationtretyak.herokuapp.com/", "count_peoples": "https://facecountdetector.herokuapp.com/"}, "data": {"object_on_photo": {"type": "item on photo", "language": "en-US", "keywords_group": "object_on_photo"}, "count_peoples":  {"type": "count peoples", "language": "en-US", "keywords_group": "count_peoples"}}}
